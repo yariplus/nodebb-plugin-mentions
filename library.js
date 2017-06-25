@@ -11,6 +11,7 @@ var	async = module.parent.require('async'),
 	Notifications = module.parent.require('./notifications'),
 	Privileges = module.parent.require('./privileges'),
 	Utils = module.parent.require('../public/src/utils'),
+	Plugins = module.parent.require('./plugins'),
 
 	SocketPlugins = module.parent.require('./socket.io/plugins'),
 
@@ -120,6 +121,11 @@ Mentions.notify = function(postData) {
 						return;
 					}
 					Notifications.push(notification, uids);
+					uids.forEach(function(uid) {
+						Plugins.fireHook('action:mentioned.uid:' + uid, {
+							post: postData
+						});
+					});
 				});
 			});
 		});
